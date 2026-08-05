@@ -1,0 +1,31 @@
+name: Executar código Python diariamente
+
+on:
+  schedule:
+    - cron: "0 12 * * *"
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+      CHAT_ID: ${{ secrets.CHAT_ID }}
+      FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Instalar dependências (opcional)
+        run: |
+          pip install -r requirements.txt || true
+
+      - name: Executar script
+        run: |
+          python Arcanine_bot.py
